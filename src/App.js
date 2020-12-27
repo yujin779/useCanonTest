@@ -70,7 +70,9 @@ const App = () => {
         />
         {/* <pointLight position={[-10, -10, -10]} /> */}
         <CameraController />
-        {/* Physicsの中にあるオブジェクトが物理演算される */}
+        {/* Physicsの中にあるオブジェクトが物理演算される 
+        https://github.com/pmndrs/use-cannon
+        現在react-three-fiber バージョン5にuse-cannonが対応していない */}
         <Physics
           // 重力設定
           gravity={[0, -30, 0]}
