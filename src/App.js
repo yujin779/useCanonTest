@@ -10,6 +10,7 @@ import styles from "./styles";
  * 落ちてくるボックス
  */
 const DropBox = (props) => {
+  // useBoxを使用してボックス型の物理演算を設定
   const [ref] = useBox(() => ({
     mass: 1,
     args: [1, 1, 1],
@@ -40,6 +41,7 @@ const CreateBox = () => {
  * 動かない床
  */
 const Floor = ({ position, args, color }) => {
+  // useBoxを使用してボックス型の物理演算を設定
   const [ref] = useBox(() => ({
     type: "Static",
     mass: 1,
