@@ -1,16 +1,15 @@
 // App.js
-import React, { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
-import { View, Text } from "react-native";
-import { Canvas, useFrame, useThree, extend } from "react-three-fiber";
+import React, { useState } from "react";
+import { View } from "react-native";
+import { Canvas } from "react-three-fiber";
 import CameraController from "./components/CameraController";
-import { Physics, useBox, usePlane, useSphere } from "use-cannon";
+import { Physics, useBox } from "use-cannon";
 import styles from "./styles";
-import { createGlobalState } from "react-hooks-global-state";
 
+/**
+ * 落ちてくるボックス
+ */
 const DropBox = (props) => {
-  // const [count, setCount] = useState(3);
-  // useRef();
   const [ref] = useBox(() => ({
     mass: 1,
     args: [1, 1, 1],
@@ -18,15 +17,16 @@ const DropBox = (props) => {
   }));
 
   return (
-    // <instancedMesh ref={ref} args={[null, null, count]}>
-    <mesh ref={ref}>
-      <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-      <meshStandardMaterial attach="material" color={"orange"} />
+    <mesh receiveShadow castShadow ref={ref}>
+      <boxBufferGeometry attach="geometry" />
+      <meshLambertMaterial attach="material" color={"orange"} />
     </mesh>
-    // </instancedMesh>
   );
 };
 
+/**
+ * DropBoxを配列の位置に設置
+ */
 const CreateBox = () => {
   const [boxes] = useState([
     { position: [0, 8, 0] },
@@ -36,6 +36,9 @@ const CreateBox = () => {
   return boxes.map((props) => <DropBox {...props} />);
 };
 
+/**
+ * 動かない床
+ */
 const Floor = ({ position, args, color }) => {
   const [ref] = useBox(() => ({
     type: "Static",
@@ -44,30 +47,41 @@ const Floor = ({ position, args, color }) => {
     position: position
   }));
   return (
-    <mesh ref={ref}>
+    <mesh receiveShadow castShadow ref={ref}>
       <boxBufferGeometry attach="geometry" args={args} />
-      <meshStandardMaterial attach="material" color={color} />
+      <meshLambertMaterial attach="material" color={color} />
     </mesh>
   );
 };
 
-/*
- * 1. 表示される入り口
- */
 const App = () => {
   return (
     <View style={styles.app}>
-      <Canvas camera={{ position: [0, 5, 10], near: 0.1, far: 500 }}>
+      <Canvas shadowMap camera={{ position: [0, 3, 10], near: 0.1, far: 50 }}>
         <ambientLight intensity={0.7} />
-        <spotLight position={[20, 20, 20]} angle={0.25} penumbra={0.5} />
-        <pointLight position={[-10, -10, -10]} />
+        <spotLight
+          position={[2, 10, 6]}
+          angle={0.8}
+          penumbra={0.5}
+          intensity={1}
+          castShadow
+          shadow-mapSize-width={256}
+          shadow-mapSize-height={256}
+        />
+        {/* <pointLight position={[-10, -10, -10]} /> */}
         <CameraController />
+        {/* Physicsの中にあるオブジェクトが物理演算される */}
         <Physics
+          // 重力設定
           gravity={[0, -30, 0]}
-          defaultContactMaterial={{ restitution: 0.5 }}
+          // restitution=反発係数
+          defaultContactMaterial={{ restitution: 0.6 }}
         >
+          {/* 落ちてくるボックス */}
           <DropBox position={[1, 1, 0]} />
+          {/* 配列のポジションにDropBoxを設置 */}
           <CreateBox />
+          {/* 床を設置 */}
           <Floor position={[0, 0, 0]} args={[5, 0.5, 5]} color={"#ed553b"} />
           <Floor position={[0, -4, 0]} args={[15, 0.5, 15]} color={"#173f5f"} />
         </Physics>
