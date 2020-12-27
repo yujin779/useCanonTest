@@ -1,5 +1,5 @@
 // App.js
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { View, Text } from "react-native";
 import { Canvas, useFrame, useThree, extend } from "react-three-fiber";
@@ -20,6 +20,29 @@ const DropBox = () => {
       <meshStandardMaterial attach="material" color={"orange"} />
     </mesh>
   );
+};
+
+const CreateBox = () => {
+
+ useEffect(
+    () =>
+      // 一定時間ごとに処理をおこなう
+      void setInterval(
+        () =>
+          /**
+           * ./resources/helpersからインポートされたsvgの配列番号を順次変更
+           */
+          {console.log("a")},
+        // 3秒ごとに実行
+        3000
+      ),
+    //第2引数を空要素にすることにより
+    //マウント・アンマウント時のみ第１引数の関数を実行
+    []
+  )
+
+
+  return <DropBox />;
 };
 
 const Floor = ({ position, args }) => {
@@ -52,7 +75,8 @@ const App = () => {
           gravity={[0, -30, 0]}
           defaultContactMaterial={{ restitution: 0.5 }}
         >
-          <DropBox />
+          {/* <DropBox /> */}
+          <CreateBox />
           <Floor position={[0, 0, 0]} args={[5, 0.3, 5]} />
           <Floor position={[0, -4, 0]} args={[15, 0.3, 15]} />
         </Physics>
