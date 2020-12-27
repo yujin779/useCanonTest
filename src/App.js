@@ -68,7 +68,6 @@ const App = () => {
           shadow-mapSize-width={256}
           shadow-mapSize-height={256}
         />
-        {/* <pointLight position={[-10, -10, -10]} /> */}
         <CameraController />
         {/* Physicsの中にあるオブジェクトが物理演算される 
         https://github.com/pmndrs/use-cannon
